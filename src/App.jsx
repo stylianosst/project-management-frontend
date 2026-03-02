@@ -10,6 +10,8 @@ import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Projects from "./pages/Projects";
+import AddProject from "./pages/AddProject";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function Layout() {
@@ -31,6 +33,22 @@ function Layout() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/projects"
+          element={
+            <ProtectedRoute>
+              <Projects />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/project/add"
+          element={
+            <ProtectedRoute>
+              <AddProject />
             </ProtectedRoute>
           }
         />
