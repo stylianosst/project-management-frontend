@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://project-management.test/api",
+  baseURL: "https://project-management-api.steliospap.com",
 });
 
 export default api;
