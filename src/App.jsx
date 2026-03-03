@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
+  Navigate,
 } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -29,8 +29,9 @@ function Layout() {
     <>
       {showNavbar && <Navbar />}
       <Routes>
+        {/* Redirect root to dashboard */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         {/* Public Routes */}
-        <Route path="/" element={<Home name="User" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         {/* Protected Routes */}

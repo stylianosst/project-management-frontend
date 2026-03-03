@@ -21,7 +21,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center space-x-8 md:pl-28">
+        {/* <ul className="hidden md:flex items-center space-x-8 md:pl-28">
           <li>
             <Link to="/" className="hover:text-violet-600">
               Home
@@ -37,7 +37,7 @@ export default function Navbar() {
               Portfolio
             </Link>
           </li>
-        </ul>
+        </ul> */}
 
         {/* Desktop Button */}
         <button className="md:inline hidden bg-white hover:bg-gray-50 border border-gray-300 ml-20 px-9 py-2 rounded-full active:scale-95 transition-all">
