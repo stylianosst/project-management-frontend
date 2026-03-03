@@ -1,0 +1,185 @@
+import { useState, useEffect } from "react";
+import api from "../axios";
+import { useNavigate, Link, useParams } from "react-router-dom";
+import DashboardLayout from "../components/DashboardLayout";
+
+export default function EditTask() {
+  const { id } = useParams();
+  const [projectId, setProjectId] = useState("");
+  const [projects, setProjects] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [status, setStatus] = useState("pending");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTaskAndProjects = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const projectResponse = await api.get("/projects", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setProjects(projectResponse.data);
+
+        const taskResponse = await api.get(`/tasks/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const task = taskResponse.data;
+        setProjectId(task.project_id);
+        setTitle(task.title);
+        setDescription(task.description);
+        setDueDate(task.due_date);
+        setStatus(task.status);
+      } catch (error) {
+        console.log("Error fetching task details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTaskAndProjects();
+  }, [id]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const token = localStorage.getItem("token");
+    try {
+      await api.put(
+        `/tasks/${id}`,
+        {
+          project_id: projectId,
+          title,
+          description,
+          due_date: dueDate,
+          status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      alert("Task updated successfully!");
+      navigate("/tasks");
+    } catch (error) {
+      console.error("Error updating task:", error);
+      alert("Failed to update task. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <DashboardLayout>
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="w-full bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+            Edit Task
+          </h2>
+          <Link
+            to="/tasks"
+            className="text-blue-500 hover:underline mb-4 inline-block"
+          >
+            &larr; Back to Tasks
+          </Link>
+          <form className="space-y-4 w-full">
+            {/* Project ID */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Project
+              </label>
+              <select
+                value={projectId}
+                onChange={(e) => setProjectId(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 p-2"
+              >
+                <option value="">---Select Project---</option>
+                {projects.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Title */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Title
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter task title"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 p-2"
+                required
+              />
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Description
+              </label>
+              <textarea
+                placeholder="Enter task description"
+                rows="4"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 p-2"
+                required
+              ></textarea>
+            </div>
+
+            {/* Due Date */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Due Date
+              </label>
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 p-2"
+                required
+              />
+            </div>
+
+            {/* Status */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Status
+              </label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 p-2"
+                required
+              >
+                <option value="pending">Pending</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+
+            {/* Submit Button */}
+            <div>
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-md shadow hover:bg-blue-700 transition"
+              >
+                {loading ? "Updating..." : "Update"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+}
