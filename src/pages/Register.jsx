@@ -1,29 +1,27 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import api from "../axios";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
     try {
       const response = await api.post("/register", { name, email, password });
-      const token = response.data.token;
-      setMessage(response.data.message);
+      toast.success(response.data.message);
       navigate("/login");
     } catch (error) {
       if (error.response && error.response.data.message) {
-        setMessage(error.response.data.message);
+        toast.error(error.response.data.message);
       } else {
-        setMessage("Something went wrong.");
+        toast.error("Something went wrong.");
       }
     } finally {
       setLoading(false);
@@ -71,7 +69,6 @@ export default function Register() {
         >
           {loading ? "Signing up..." : "Sign Up"}
         </button>
-        {message && <p>{message}</p>}
         <p className="text-center mt-4">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-500 underline">
