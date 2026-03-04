@@ -2,6 +2,7 @@ import DashboardLayout from "../components/DashboardLayout";
 import React, { useState, useEffect } from "react";
 import api from "../axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Projects() {
   const [projects, setProjects] = useState([]);
@@ -39,10 +40,10 @@ export default function Projects() {
         },
       });
       setProjects(projects.filter((project) => project.id !== id));
-      alert("Project deleted successfully!");
+      toast.success("Project deleted successfully!");
     } catch (error) {
       console.error("Error deleting project:", error);
-      alert("Failed to delete project. Please try again.");
+      toast.error("Failed to delete project. Please try again.");
     }
   };
   return (
@@ -103,7 +104,10 @@ export default function Projects() {
                         {project.due_date}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap flex gap-2">
-                        <Link to={`/project-details/${project.id}`} className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition">
+                        <Link
+                          to={`/project-details/${project.id}`}
+                          className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition"
+                        >
                           View
                         </Link>
                         <button className="px-3 py-1 bg-yellow-400 text-white text-sm rounded hover:bg-yellow-500 transition">

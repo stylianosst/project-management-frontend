@@ -101,6 +101,7 @@ function Layout() {
         />
       </Routes>
       <ToastContainer
+        theme="colored"
         position="top-right"
         autoClose={4000}
         hideProgressBar={false}
