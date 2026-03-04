@@ -30,7 +30,7 @@ function Layout() {
       {showNavbar && <Navbar />}
       <Routes>
         {/* Redirect root to dashboard */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<Home />} />
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
