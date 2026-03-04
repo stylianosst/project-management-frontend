@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import api from "../axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { deleteTask, getTasks } from "../services/taskSevice";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -12,11 +13,7 @@ export default function Tasks() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await api.get("/tasks", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await getTasks(token);
         setTasks(response.data);
       } catch (error) {
         console.log("Error fetching tasks:", error);
@@ -33,11 +30,7 @@ export default function Tasks() {
     );
     if (!confirmDelete) return;
     try {
-      await api.delete(`/tasks/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await deleteTask(id, token);
       setTasks(tasks.filter((task) => task.id !== id));
       alert("Task deleted successfully!");
     } catch (error) {

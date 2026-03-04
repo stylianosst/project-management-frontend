@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
+import { createTask } from "../services/taskSevice";
 
 export default function AddTask() {
   const [projectId, setProjectId] = useState("");
@@ -36,8 +37,7 @@ export default function AddTask() {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.post(
-        "/tasks",
+      await createTask(
         {
           project_id: projectId,
           title,
@@ -45,11 +45,7 @@ export default function AddTask() {
           due_date: dueDate,
           status: "pending",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        token
       );
       toast.success("Task added successfully!");
       navigate("/tasks");

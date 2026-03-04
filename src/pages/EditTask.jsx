@@ -3,6 +3,7 @@ import api from "../axios";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import { useAuth } from "../context/AuthContext";
+import { updateTask } from "../services/taskSevice";
 
 export default function EditTask() {
   const { id } = useParams();
@@ -50,21 +51,14 @@ export default function EditTask() {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.put(
-        `/tasks/${id}`,
-        {
-          project_id: projectId,
-          title,
-          description,
-          due_date: dueDate,
-          status,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await updateTask({
+        id,
+        projectId,
+        title,
+        description,
+        dueDate,
+        status,
+      }, token);
       alert("Task updated successfully!");
       navigate("/tasks");
     } catch (error) {
