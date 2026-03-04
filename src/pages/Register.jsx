@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import api from "../axios";
+import { registerService } from "../services/authService";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -14,7 +14,7 @@ export default function Register() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await api.post("/register", { name, email, password });
+      const response = await registerService({ name, email, password });
       toast.success(response.data.message);
       navigate("/login");
     } catch (error) {

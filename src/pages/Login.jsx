@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import api from "../axios";
 import { useAuth } from "../context/AuthContext";
 import { loginService } from "../services/authService";
 
