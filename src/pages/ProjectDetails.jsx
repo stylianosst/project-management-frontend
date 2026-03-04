@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import { useParams } from "react-router-dom";
-import api from "../axios";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import { getProjectDetails } from "../services/projectService";
 export default function ProjectDetails() {
   const { id } = useParams();
   const [projectDetails, setProjectDetails] = useState([]);
@@ -12,11 +12,7 @@ export default function ProjectDetails() {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await api.get(`/projects/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await getProjectDetails(id, token);
         setProjectDetails(response.data);
       } catch (error) {
         console.error("Error fetching project details:", error);

@@ -1,9 +1,10 @@
 import DashboardLayout from "../components/DashboardLayout";
-import React, { useState, useEffect } from "react";
-import api from "../axios";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
+import { deleteProject, getProjects } from "../services/projectService";
+
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,11 +13,7 @@ export default function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await api.get("/projects", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await getProjects(token);
         setProjects(response.data);
       } catch (error) {
         console.log("Error fetching projects:", error);
@@ -33,11 +30,7 @@ export default function Projects() {
     );
     if (!confirmDelete) return;
     try {
-      await api.delete(`/projects/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await deleteProject(id, token);
       setProjects(projects.filter((project) => project.id !== id));
       toast.success("Project deleted successfully!");
     } catch (error) {
