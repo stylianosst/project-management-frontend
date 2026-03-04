@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
+import { toast } from "react-toastify";
 
 export default function EditProject() {
   const { id } = useParams();
@@ -26,7 +27,7 @@ export default function EditProject() {
         setDueDate(response.data.due_date.split("T")[0]);
       } catch (error) {
         console.log("Error fetching project details:", error);
-        alert("Failed to fetch project details. Please try again.");
+        toast.error("Failed to fetch project details. Please try again.");
       }
     };
     fetchProject();
@@ -47,11 +48,11 @@ export default function EditProject() {
           },
         },
       );
-      alert("Project added successfully!");
+      toast.success("Project updated successfully!");
       navigate("/projects");
     } catch (error) {
-      console.error("Error adding project:", error);
-      alert("Failed to add project. Please try again.");
+      console.error("Error updating project:", error);
+      toast.error("Failed to update project. Please try again.");
     } finally {
       setLoading(false);
     }
