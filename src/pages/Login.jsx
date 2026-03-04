@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../axios";
 import { useAuth } from "../context/AuthContext";
+import { loginService } from "../services/authService";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await api.post("/login", { email, password });
+      const response = await loginService({ email, password });
       const token = response.data.token;
       const user = response.data.user;
       login(token, user);
