@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import { useParams } from "react-router-dom";
 import api from "../axios";
-
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 export default function ProjectDetails() {
   const { id } = useParams();
   const [projectDetails, setProjectDetails] = useState([]);
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const token = localStorage.getItem("token");
         const response = await api.get(`/projects/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -19,12 +20,12 @@ export default function ProjectDetails() {
         setProjectDetails(response.data);
       } catch (error) {
         console.error("Error fetching project details:", error);
-        alert("Failed to fetch project details. Please try again.");
+        toast.error("Failed to fetch project details. Please try again.");
       }
     };
 
     fetchProject();
-  }, [id]);
+  }, [id, token]);
   return (
     <DashboardLayout>
       <div className="p-6 bg-gray-50 min-h-screen">

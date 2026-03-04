@@ -2,15 +2,16 @@ import DashboardLayout from "../components/DashboardLayout";
 import React, { useState, useEffect } from "react";
 import api from "../axios";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const token = localStorage.getItem("token");
         const response = await api.get("/tasks", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -24,10 +25,9 @@ export default function Tasks() {
       }
     };
     fetchTasks();
-  }, []);
+  }, [token]);
 
   const handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this task?",
     );

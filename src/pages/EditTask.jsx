@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import api from "../axios";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
+import { useAuth } from "../context/AuthContext";
 
 export default function EditTask() {
   const { id } = useParams();
@@ -13,12 +14,11 @@ export default function EditTask() {
   const [status, setStatus] = useState("pending");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchTaskAndProjects = async () => {
       try {
-        const token = localStorage.getItem("token");
-
         const projectResponse = await api.get("/projects", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -44,11 +44,11 @@ export default function EditTask() {
       }
     };
     fetchTaskAndProjects();
-  }, [id]);
+  }, [id, token]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const token = localStorage.getItem("token");
     try {
       await api.put(
         `/tasks/${id}`,

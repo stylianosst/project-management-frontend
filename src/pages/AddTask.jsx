@@ -3,6 +3,7 @@ import api from "../axios";
 import { useNavigate, Link } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 export default function AddTask() {
   const [projectId, setProjectId] = useState("");
@@ -12,11 +13,11 @@ export default function AddTask() {
   const [dueDate, setDueDate] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const token = localStorage.getItem("token");
         const response = await api.get("/projects", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -30,11 +31,10 @@ export default function AddTask() {
       }
     };
     fetchProjects();
-  }, []);
+  }, [token]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const token = localStorage.getItem("token");
     try {
       await api.post(
         "/tasks",

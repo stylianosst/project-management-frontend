@@ -3,15 +3,15 @@ import React, { useState, useEffect } from "react";
 import api from "../axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import { useAuth } from "../context/AuthContext";
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const token = localStorage.getItem("token");
         const response = await api.get("/projects", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -25,10 +25,9 @@ export default function Projects() {
       }
     };
     fetchProjects();
-  }, []);
+  }, [token]);
 
   const handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this project?",
     );

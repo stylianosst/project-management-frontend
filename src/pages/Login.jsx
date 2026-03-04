@@ -2,12 +2,14 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../axios";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,9 +17,8 @@ export default function Login() {
     try {
       const response = await api.post("/login", { email, password });
       const token = response.data.token;
-      localStorage.setItem("token", token);
       const user = response.data.user;
-      localStorage.setItem("user", JSON.stringify(user));
+      login(token, user);
       toast.success(response.data.message);
       navigate("/dashboard");
     } catch (error) {
